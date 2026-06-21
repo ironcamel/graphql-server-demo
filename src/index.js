@@ -1,98 +1,21 @@
 import cors from 'cors';
 import express from 'express';
-import { ApolloServer, gql } from 'apollo-server-express';
+import { ApolloServer } from 'apollo-server-express';
+
+import models from './models/index.js';
+import resolvers from './resolvers/index.js';
+import schema from './schema/index.js';
 
 const app = express();
 
 app.use(cors());
 
-const schema = gql`
-  type Query {
-    users: [User!]
-    me: User
-    user(id: ID!): User
-    messages: [Message!]!
-    message(id: ID!): Message!
-  }
-
-  type User {
-    id: ID!
-    username: String!
-    messages: [Message!]
-  }
-
-  type Message {
-    id: ID!
-    text: String!
-    user: User!
-  }
-`;
-
-let users = {
-  1: {
-    id: '1',
-    username: 'Naveed03',
-    messageIds: [1],
-  },
-  2: {
-    id: '2',
-    username: 'Dave Davids',
-    messageIds: [2],
-  },
-};
-
-let messages = {
-  1: {
-    id: '1',
-    text: 'Hello World',
-    userId: '1',
-  },
-  2: {
-    id: '2',
-    text: 'By World',
-    userId: '2',
-  },
-};
-
-const resolvers = {
-  Query: {
-    users: () => {
-      return Object.values(users);
-    },
-    user: (_parent, { id }) => {
-      return users[id];
-    },
-    me: (_parent, args, { me }) => {
-      return me;
-    },
-    messages: () => {
-      return Object.values(messages);
-    },
-    message: (_parent, { id }) => {
-      return messages[id];
-    },
-  },
-
-  User: {
-    messages: user => {
-      return Object.values(messages).filter(
-        message => message.userId === user.id,
-      );
-    },
-  },
-
-  Message: {
-    user: message => {
-      return users[message.userId];
-    },
-  },
-};
-
 const server = new ApolloServer({
   typeDefs: schema,
   resolvers,
   context: {
-    me: users[1],
+    models,
+    me: models.users[1],
   },
 });
 
