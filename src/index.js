@@ -11,12 +11,14 @@ const app = express();
 
 app.use(cors());
 
+//const me = await models.User.findByLogin('nmassjou');
 const server = new ApolloServer({
   typeDefs: schema,
   resolvers,
   context: async () => ({
     models,
     me: await models.User.findByLogin('nmassjou'),
+    secret: process.env.SECRET,
   }),
 });
 
@@ -32,7 +34,7 @@ sequelize.sync({ force: eraseDatabaseOnSync }).then(async () => {
   }
 
   app.listen({ port: 8000 }, () => {
-    console.log('Apollo Server on http://localhost:8000/graphql');
+    console.log('Apollo Server is listening on http://localhost:8000/graphql');
   });
 });
 
@@ -40,6 +42,8 @@ const createUsersWithMessages = async () => {
   await models.User.create(
     {
       username: 'nmassjou',
+      email: 'naveed@foo.com',
+      password: 'aaa',
       messages: [
         {
           text: 'Published the Road to learn React',
@@ -54,6 +58,8 @@ const createUsersWithMessages = async () => {
   await models.User.create(
     {
       username: 'ddavids',
+      email: 'david@foo.com',
+      password: 'bbb',
       messages: [
         {
           text: 'Happy to release ...',
