@@ -17,6 +17,7 @@
     "express": "^4.22.2",
     "graphql": "^16.14.2",
     "graphql-resolvers": "^0.4.2",
+    "graphql-scalars": "^1.25.0",
     "jsonwebtoken": "^9.0.3",
     "pg": "^8.22.0",
     "sequelize": "^6.37.8",
