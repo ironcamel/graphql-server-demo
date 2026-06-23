@@ -1,7 +1,8 @@
 import 'dotenv/config';
 import cors from 'cors';
 import express from 'express';
-import { ApolloServer } from 'apollo-server-express';
+import jwt from 'jsonwebtoken';
+import { ApolloServer, AuthenticationError } from 'apollo-server-express';
 
 import models, { sequelize } from './models/index.js';
 import resolvers from './resolvers/index.js';
@@ -11,15 +12,25 @@ const app = express();
 
 app.use(cors());
 
-//const me = await models.User.findByLogin('nmassjou');
+const getMe = async (req) => {
+  const token = req.headers['x-token'];
+
+  if (token) {
+    try {
+      return jwt.verify(token, process.env.SECRET);
+    } catch (e) {
+      throw new AuthenticationError('Your session expired. Sign in again.');
+    }
+  }
+};
+
 const server = new ApolloServer({
   typeDefs: schema,
   resolvers,
-  context: async () => ({
-    models,
-    me: await models.User.findByLogin('nmassjou'),
-    secret: process.env.SECRET,
-  }),
+  context: async ({ req }) => {
+    const me = await getMe(req);
+    return { models, me, secret: process.env.SECRET };
+  },
 });
 
 await server.start();
@@ -41,9 +52,10 @@ sequelize.sync({ force: eraseDatabaseOnSync }).then(async () => {
 const createUsersWithMessages = async () => {
   await models.User.create(
     {
-      username: 'nmassjou',
+      username: 'naveed',
       email: 'naveed@foo.com',
       password: 'aaa',
+      role: 'ADMIN',
       messages: [
         {
           text: 'Published the Road to learn React',
@@ -57,7 +69,7 @@ const createUsersWithMessages = async () => {
 
   await models.User.create(
     {
-      username: 'ddavids',
+      username: 'david',
       email: 'david@foo.com',
       password: 'bbb',
       messages: [
