@@ -59,7 +59,7 @@ const createUsersWithMessages = async (now) => {
       messages: [
         {
           text: 'Published the Road to learn React',
-          createdAt: now,
+          createdAt: now.setSeconds(now.getSeconds() + 1),
         },
       ],
     },
@@ -76,11 +76,11 @@ const createUsersWithMessages = async (now) => {
       messages: [
         {
           text: 'Happy to release ...',
-          createdAt: now,
+          createdAt: now.setSeconds(now.getSeconds() + 2),
         },
         {
           text: 'Published a complete ...',
-          createdAt: now,
+          createdAt: now.setSeconds(now.getSeconds() + 3),
         },
       ],
     },
