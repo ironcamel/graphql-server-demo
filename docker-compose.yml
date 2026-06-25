@@ -1,6 +1,7 @@
 services:
   app:
     build: .
+    image:  161651545388.dkr.ecr.us-east-1.amazonaws.com/graphql-app:latest
     ports:
       - "8001:8000"
     environment:
