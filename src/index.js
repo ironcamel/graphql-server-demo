@@ -44,7 +44,8 @@ sequelize.sync({ force: eraseDatabaseOnSync }).then(async () => {
     createUsersWithMessages(new Date());
   }
 
-  app.listen({ port: 8000 }, () => {
+  const port = process.env.NODE_PORT;
+  app.listen({ port }, () => {
     console.log('Apollo Server is listening on http://localhost:8000/graphql');
   });
 });

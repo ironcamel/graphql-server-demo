@@ -1,7 +1,8 @@
 services:
   app:
     build: .
-    image:  161651545388.dkr.ecr.us-east-1.amazonaws.com/graphql-app:latest
+    #image: graphql-app:latest
+    image: 551522033132.dkr.ecr.us-east-1.amazonaws.com/graphql-app:latest
     ports:
       - "8001:8000"
     environment:
@@ -9,13 +10,16 @@ services:
       DATABASE_USER: ${DATABASE_USER}
       DATABASE_PASSWORD: ${DATABASE_PASSWORD}
       DATABASE_HOST: db
+      NODE_PORT: ${NODE_PORT}
       SECRET: ${SECRET}
     depends_on:
       db:
         condition: service_healthy
 
   db:
-    image: postgres:16-alpine
+    build: ./db
+    #image: postgres:16-alpine
+    image: 551522033132.dkr.ecr.us-east-1.amazonaws.com/graphql-db:latest
     environment:
       POSTGRES_DB: ${DATABASE}
       POSTGRES_USER: ${DATABASE_USER}

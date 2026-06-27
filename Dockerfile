@@ -11,10 +11,13 @@ FROM node:20-alpine
 
 WORKDIR /app
 
+RUN apk add --no-cache curl
+
 COPY --from=builder /app/node_modules ./node_modules
 COPY package.json ./
 COPY src ./src
 
 EXPOSE 8000
+EXPOSE 80
 
 CMD ["node", "src/index.js"]
